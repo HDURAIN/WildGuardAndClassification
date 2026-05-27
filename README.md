@@ -36,9 +36,9 @@ WildGuard first detects whether the prompt is harmful. Only rows detected as har
 
 ## Chinese 100-Case Test Set
 
-The prepared Chinese test file is `data/chinese_wildguard_100.csv`. It contains:
+The prepared Chinese test file is `data/chinese_wildguard_150.csv`. It contains:
 
-- 50 harmful Chinese prompts sampled from `越狱数据集.xlsx`
+- 100 harmful Chinese prompts sampled from `越狱数据集.xlsx`, balanced as 20 samples for each coarse category
 - 50 generated safe Chinese prompts with more ambiguous safety-adjacent wording
 - binary labels in `label`
 - coarse-category ground truth in `category_label`
@@ -112,7 +112,7 @@ WildGuard:
 
 ```bash
 python run_wildguard.py \
-  --input data/chinese_wildguard_100.csv \
+  --input data/chinese_wildguard_150.csv \
   --output outputs/wildguard_smoke.csv \
   --batch-size 1 \
   --limit 5
@@ -122,13 +122,13 @@ python run_wildguard.py \
 
 ```bash
 python run_wildguard.py \
-  --input data/chinese_wildguard_100.csv \
+  --input data/chinese_wildguard_150.csv \
   --output outputs/wildguard_predictions.csv \
   --batch-size 4
 ```
 
 For smaller GPUs, reduce `--batch-size` to `1`. If memory is still insufficient, reduce `--max-length`.
-The prompt category classifier runs after WildGuard and only receives rows where `harmful_request` is harmful. You can force it to CPU with `--category-device cpu`.
+The prompt category classifier runs after WildGuard and only receives rows where `harmful_request` is harmful. It uses category definitions as zero-shot labels, maps predictions back to the short category names, and records the extracted classification text in `category_input`. You can force it to CPU with `--category-device cpu`.
 
 ## Evaluation
 
